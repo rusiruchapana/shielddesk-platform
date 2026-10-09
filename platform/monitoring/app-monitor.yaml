@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: shielddesk-api
+  namespace: monitoring
+  labels: {release: monitoring}
+spec:
+  namespaceSelector: {matchNames: [shielddesk-dev]}
+  selector: {matchLabels: {app: shielddesk-api}}
+  endpoints:
+    - port: http
+      path: /api/internal/metrics
+      interval: 30s

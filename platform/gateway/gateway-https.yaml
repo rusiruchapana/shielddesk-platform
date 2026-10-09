@@ -1,0 +1,20 @@
+# Public demo: populate real TLS secret and DNS before exposing login.
+apiVersion: v1
+kind: Namespace
+metadata: {name: platform-gateway}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata: {name: shielddesk-gateway, namespace: platform-gateway}
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: https
+      hostname: "*.shielddesk.example.com" # replace with a DNS zone you control
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs: [{name: shielddesk-tls, kind: Secret}]
+      allowedRoutes:
+        namespaces: {from: Selector, selector: {matchLabels: {shielddesk.gateway/allowed: "true"}}}

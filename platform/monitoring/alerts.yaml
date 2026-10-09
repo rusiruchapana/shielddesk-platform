@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: shielddesk-alerts
+  namespace: monitoring
+  labels: {release: monitoring}
+spec:
+  groups:
+  - name: shielddesk
+    rules:
+    - alert: ShieldDeskAPIUnavailable
+      expr: kube_deployment_status_replicas_available{deployment="shielddesk-api",namespace="shielddesk-dev"} < 1
+      for: 3m
+      labels: {severity: warning}
+      annotations:
+        summary: "ShieldDesk API has no ready replica"
+    - alert: ShieldDeskContainerRestarts
+      expr: increase(kube_pod_container_status_restarts_total{namespace="shielddesk-dev"}[10m]) > 2
+      for: 1m
+      labels: {severity: warning}
+      annotations:
+        summary: "Pod restarting repeatedly"

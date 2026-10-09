@@ -1,0 +1,15 @@
+grafana:
+  service: {type: ClusterIP}
+  admin:
+    existingSecret: monitoring-grafana
+  # Create monitoring-grafana Secret in namespace first; never commit a real password.
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 3d
+    resources:
+      requests: {cpu: 150m, memory: 350Mi}
+alertmanager:
+  enabled: true
+kubeStateMetrics: {enabled: true}
+nodeExporter: {enabled: true}

@@ -1,0 +1,19 @@
+mode: deployment
+image: {repository: otel/opentelemetry-collector-contrib}
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc: {endpoint: 0.0.0.0:4317}
+        http: {endpoint: 0.0.0.0:4318}
+  processors:
+    memory_limiter: {check_interval: 5s, limit_mib: 128}
+    batch: {}
+  exporters:
+    debug: {verbosity: basic}
+  service:
+    pipelines:
+      traces: {receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug]}
+      metrics: {receivers: [otlp], processors: [memory_limiter, batch], exporters: [debug]}
+resources:
+  limits: {memory: 256Mi}

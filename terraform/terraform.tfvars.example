@@ -1,0 +1,7 @@
+subscription_id = "YOUR_AZURE_SUBSCRIPTION_ID"
+location = "australiaeast"
+prefix = "shielddesk"
+vm_size = "Standard_D2s_v5"
+node_count = 1
+create_user_pool = false
+owner = "devsecops-lab"
